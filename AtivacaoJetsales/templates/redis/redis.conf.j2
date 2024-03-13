@@ -1,0 +1,39 @@
+# Redis configuration file
+
+# Set the bind address to localhost to only allow connections from the local machine
+bind 127.0.0.1
+
+# Enable the AOF persistence mode
+appendonly yes
+appendfilename "appendonly.aof"
+
+# Set the Redis password
+{% if redis_password %}
+requirepass {{ redis_password }}
+{% endif %}
+
+# Set the number of databases (default is 16)
+databases 1
+
+# Set the TCP backlog queue limit (default is 511)
+tcp-backlog 128
+
+# Set the maximum number of clients (default is unlimited)
+maxclients 10000
+
+# Disable Lua scripting for security reasons
+lua-time-limit 0
+lua-max-memory-policy noeviction
+
+# Set the maximum number of active Redis connections (default is unlimited)
+maxconns 1000
+
+# Log to the syslog
+loglevel notice
+logfile ""
+
+# Enable TCP keepalive
+tcp-keepalive 60
+
+# Enable client output buffer limits
+client-output-buffer-limit normal 0 0 0 hard 1000000 soft 1000000 60

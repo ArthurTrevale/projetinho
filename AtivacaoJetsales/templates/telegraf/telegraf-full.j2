@@ -1,0 +1,305 @@
+[global_tags]
+[agent]
+  interval = "30s"
+  round_interval = true
+  metric_batch_size = 10000
+  metric_buffer_limit = 100000
+  collection_jitter = "0s"
+  flush_interval = "10s"
+  flush_jitter = "0s"
+  precision = ""
+  debug = true
+  quiet = false
+  logtarget = "file"
+  logfile = "/var/log/telegraf/telegraf.log"
+  logfile_rotation_interval = "24h"
+  logfile_rotation_max_size = "10MB"
+  logfile_rotation_max_archives = 7
+  log_with_timezone = "America/Sao_Paulo"
+  hostname = "{{ inventory_hostname }}"
+  omit_hostname = false
+[[outputs.influxdb]]
+  urls = ["http://{{grafana_server}}:8086"]
+  database = "{{db_telegraf}}"
+  insecure_skip_verify = true
+
+[[inputs.cpu]]
+percpu = true
+totalcpu = true
+collect_cpu_time = false
+report_active = false
+fielddrop = ["time_*"]
+
+[[inputs.disk]]
+ignore_fs = ["tmpfs", "devtmpfs", "devfs", "none", "iso9660", "overlay", "aufs", "squashfs"]
+
+[[inputs.diskio]]
+  # Coleta estatísticas de I/O de todos os discos locais (sempre que possível)
+  #
+  # NOTA: esta entrada atualmente só é suportada no Linux.
+  #
+  # As configurações que controlam esta entrada são:
+  #
+  # - devices = ["sda", "sdb"] # Limita a coleta de estatísticas de I/O para os discos especificados.
+  #
+  # - skip_serial_number = false # Se definido como verdadeiro, ignora os discos que não possuem um número de série
+  #
+  # - taginclude = ["tag1", "tag2"] # Inclui as tags especificadas em cada medida.
+  # - tagexclude = ["tag3", "tag4"] # Exclui as tags especificadas de cada medida.
+  #
+  # NOTA: você deve ter permissão para ler /proc/diskstats.
+
+[[inputs.mem]]
+# no configuration
+
+[[inputs.net]]
+  fieldpass = [ "bytes*" ]
+[[inputs.systemd_units]]
+
+[[inputs.system]]
+# no configuration
+
+[[inputs.swap]]
+# no configuration
+
+[[inputs.netstat]]
+# no configuration
+
+[[inputs.processes]]
+
+[[inputs.kernel]]
+# no configuration
+
+#[[inputs.procstat]]
+# no configuration
+
+[[inputs.swap]]
+# no configuration
+
+[[inputs.nginx_vts]]
+  ## An array of ngx_http_status_module or status URI to gather stats.
+  urls = ["http://localhost/status"]
+
+  ## HTTP response timeout (default: 5s)
+  response_timeout = "5s"
+
+  ## Optional TLS Config
+  # tls_ca = "/etc/telegraf/ca.pem"
+  # tls_cert = "/etc/telegraf/cert.pem"
+  # tls_key = "/etc/telegraf/key.pem"
+  ## Use TLS but skip chain & host verification
+  # insecure_skip_verify = false
+
+
+[[inputs.docker]]
+  endpoint = "unix:///var/run/docker.sock"
+  gather_services = false
+  source_tag = true
+  container_name_include = []
+  timeout = "5s"
+  perdevice_include = ["cpu", "blkio", "network"]
+  total = true
+  total_include = ["cpu", "blkio", "network"]
+  docker_label_include = []
+  docker_label_exclude = []
+  tag_env = []
+  container_state_include = []
+  container_state_exclude = []
+  insecure_skip_verify = false
+
+
+[[inputs.nginx]]
+        urls = ["http://127.0.0.1/basic_status"]
+        insecure_skip_verify = true
+        response_timeout = "5s"
+
+
+[[inputs.procstat]]
+pattern = "nginx|dotnet|telegraf|docker"
+
+user = "daemon|root|telegraf|nginx|docker"
+
+# Get the number of processes and group them by status
+[[inputs.processes]]
+  # no configuration
+
+# Read metrics from one or many mysql servers
+#[[inputs.mysql]]
+  ## specify servers via a url matching:
+  ##  [username[:password]@][protocol[(address)]]/[?tls=[true|false|skip-verify|custom]]
+  ##  see https://github.com/go-sql-driver/mysql#dsn-data-source-name
+  ##  e.g.
+  ##    servers = ["user:passwd@tcp(127.0.0.1:3306)/?tls=false"]
+  ##    servers = ["user@tcp(127.0.0.1:3306)/?tls=false"]
+  #
+  ## If no servers are specified, then localhost is used as the host.
+  #servers = ["tcp(127.0.0.1:3306)/"]
+
+  ## Selects the metric output format.
+  ##
+  ## This option exists to maintain backwards compatibility, if you have
+  ## existing metrics do not set or change this value until you are ready to
+  ## migrate to the new format.
+  ##
+  ## If you do not have existing metrics from this plugin set to the latest
+  ## version.
+  ##
+  ## Telegraf >=1.6: metric_version = 2
+  ##           <1.6: metric_version = 1 (or unset)
+  #metric_version = 2
+
+  ## if the list is empty, then metrics are gathered from all database tables
+  # table_schema_databases = []
+
+  ## gather metrics from INFORMATION_SCHEMA.TABLES for databases provided
+  ## in the list above
+  # gather_table_schema = false
+
+  ## gather thread state counts from INFORMATION_SCHEMA.PROCESSLIST
+  # gather_process_list = false
+
+  ## gather user statistics from INFORMATION_SCHEMA.USER_STATISTICS
+  # gather_user_statistics = false
+
+  ## gather auto_increment columns and max values from information schema
+  # gather_info_schema_auto_inc = false
+
+  ## gather metrics from INFORMATION_SCHEMA.INNODB_METRICS
+  # gather_innodb_metrics = false
+
+  ## gather metrics from all channels from SHOW SLAVE STATUS command output
+  # gather_all_slave_channels = false
+
+  ## gather metrics from SHOW SLAVE STATUS command output
+  # gather_slave_status = false
+
+  ## use SHOW ALL SLAVES STATUS command output for MariaDB
+  # mariadb_dialect = false
+
+  ## gather metrics from SHOW BINARY LOGS command output
+  # gather_binary_logs = false
+
+  ## gather metrics from SHOW GLOBAL VARIABLES command output
+  # gather_global_variables = true
+
+  ## gather metrics from PERFORMANCE_SCHEMA.TABLE_IO_WAITS_SUMMARY_BY_TABLE
+  # gather_table_io_waits = false
+
+  ## gather metrics from PERFORMANCE_SCHEMA.TABLE_LOCK_WAITS
+  # gather_table_lock_waits = false
+
+  ## gather metrics from PERFORMANCE_SCHEMA.TABLE_IO_WAITS_SUMMARY_BY_INDEX_USAGE
+  # gather_index_io_waits = false
+
+  ## gather metrics from PERFORMANCE_SCHEMA.EVENT_WAITS
+  # gather_event_waits = false
+
+  ## gather metrics from PERFORMANCE_SCHEMA.FILE_SUMMARY_BY_EVENT_NAME
+  # gather_file_events_stats = false
+
+  ## gather metrics from PERFORMANCE_SCHEMA.EVENTS_STATEMENTS_SUMMARY_BY_DIGEST
+  # gather_perf_events_statements             = false
+  #
+  ## gather metrics from PERFORMANCE_SCHEMA.EVENTS_STATEMENTS_SUMMARY_BY_ACCOUNT_BY_EVENT_NAME
+  # gather_perf_sum_per_acc_per_event         = false
+  #
+  ## list of events to be gathered for gather_perf_sum_per_acc_per_event
+  ## in case of empty list all events will be gathered
+  # perf_summary_events                       = []
+  #
+  # gather_perf_events_statements = false
+
+  ## the limits for metrics form perf_events_statements
+  # perf_events_statements_digest_text_limit = 120
+  # perf_events_statements_limit = 250
+  # perf_events_statements_time_limit = 86400
+
+  ## Some queries we may want to run less often (such as SHOW GLOBAL VARIABLES)
+  ##   example: interval_slow = "30m"
+  # interval_slow = ""
+
+  ## Optional TLS Config (used if tls=custom parameter specified in server uri)
+  # tls_ca = "/etc/telegraf/ca.pem"
+  # tls_cert = "/etc/telegraf/cert.pem"
+  # tls_key = "/etc/telegraf/key.pem"
+  ## Use TLS but skip chain & host verification
+  # insecure_skip_verify = false
+
+  # Read metrics from one or many postgresql servers
+#[[inputs.postgresql]]
+  ## Specify address via a url matching:
+  ##   postgres://[pqgotest[:password]]@localhost[/dbname]?sslmode=[disable|verify-ca|verify-full]&statement_timeout=...
+  ## or a simple string:
+  ##   host=localhost user=pqgotest password=... sslmode=... dbname=app_production
+  ## Users can pass the path to the socket as the host value to use a socket
+  ## connection (e.g. `/var/run/postgresql`).
+  ##
+  ## All connection parameters are optional.
+  ##
+  ## Without the dbname parameter, the driver will default to a database
+  ## with the same name as the user. This dbname is just for instantiating a
+  ## connection with the server and doesn't restrict the databases we are trying
+  ## to grab metrics for.
+  ##
+ # address = "host=localhost user=postgres sslmode=disable"
+
+  ## A custom name for the database that will be used as the "server" tag in the
+  ## measurement output. If not specified, a default one generated from
+  ## the connection address is used.
+  # outputaddress = "db01"
+
+  ## connection configuration.
+  ## maxlifetime - specify the maximum lifetime of a connection.
+  ## default is forever (0s)
+  ##
+  ## Note that this does not interrupt queries, the lifetime will not be enforced
+  ## whilst a query is running
+  # max_lifetime = "0s"
+
+  ## A  list of databases to explicitly ignore.  If not specified, metrics for all
+  ## databases are gathered.  Do NOT use with the 'databases' option.
+  # ignored_databases = ["postgres", "template0", "template1"]
+
+  ## A list of databases to pull metrics about. If not specified, metrics for all
+  ## databases are gathered.  Do NOT use with the 'ignored_databases' option.
+  # databases = ["app_production", "testing"]
+
+  ## Whether to use prepared statements when connecting to the database.
+  ## This should be set to false when connecting through a PgBouncer instance
+  ## with pool_mode set to transaction.
+  #prepared_statements = true
+
+# A plugin that can transmit logs to mongodb
+#[[outputs.mongodb]]
+  # connection string examples for mongodb
+#  dsn = "mongodb://localhost:27017"
+  # dsn = "mongodb://mongod1:27017,mongod2:27017,mongod3:27017/admin&replicaSet=myReplSet&w=1"
+
+  # overrides serverSelectionTimeoutMS in dsn if set
+  # timeout = "30s"
+
+  # default authentication, optional
+  # authentication = "NONE"
+
+  # for SCRAM-SHA-256 authentication
+  # authentication = "SCRAM"
+  # username = "root"
+  # password = "***"
+
+  # for x509 certificate authentication
+  # authentication = "X509"
+  # tls_ca = "ca.pem"
+  # tls_key = "client.pem"
+  # # tls_key_pwd = "changeme" # required for encrypted tls_key
+  # insecure_skip_verify = false
+
+  # database to store measurements and time series collections
+  # database = "telegraf"
+
+  # granularity can be seconds, minutes, or hours.
+  # configuring this value will be based on your input collection frequency.
+  # see https://docs.mongodb.com/manual/core/timeseries-collections/#create-a-time-series-collection
+  # granularity = "seconds"
+
+  # optionally set a TTL to automatically expire documents from the measurement collections.
+  # ttl = "360h"

@@ -1,0 +1,28 @@
+enterprise-{{ nome_do_host }}:
+  ansible_ssh_host: {{ endereco_ip }}
+  
+  ansible_user: root 
+  ansible_ssh_private_key_file: CastroKey
+  ansible_password: Fr2aOkN9$d!8
+  sudo_pass: qLeGgkBn6hfBY0RLg16NiB0c6j2ip
+  zabbix_hostname: "enterprise-{{projeto}}"
+  hostname: "{{ zabbix_hostname }}"
+  domain: "{{projeto}}.clickmassa.com.br"
+  domain2: "{{projeto2}}.clickmassa.com.br"
+  domain3: "{{projeto3}}.clickmassa.com.br"
+  domain4: "{{projeto4}}.clickmassa.com.br"
+  domain5: "{{projeto5}}.clickmassa.com.br"
+  domain6: "{{projeto6}}.clickmassa.com.br"
+  domain_api: "{{projeto}}api.clickmassa.com.br"
+  domain_api2: "{{projeto2}}api.clickmassa.com.br"
+  domain_api3: "{{projeto3}}api.clickmassa.com.br"
+  domain_api4: "{{projeto4}}api.clickmassa.com.br"
+  domain_api5: "{{projeto5}}api.clickmassa.com.br"
+  domain_api6: "{{projeto6}}api.clickmassa.com.br"
+  swap_file: "/swapfile"
+  swap_space: "{{ (ansible_memtotal_mb * 0.3) | int }}M"
+  root_pass: C4str0491!!
+  srv_telegraf: grafana.clickmassa.com.br
+  grafana_host: ENTERPRISE-{{projeto}}  
+  grafana_server: grafana.clickmassa.com.br  
+  db_telegraf: clickmassa

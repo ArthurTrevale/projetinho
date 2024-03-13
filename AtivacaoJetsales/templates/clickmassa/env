@@ -1,0 +1,84 @@
+NODE_ENV=production
+
+# ambiente
+#NODE_ENV=dev
+
+# URL do backend para construção dos hooks
+BACKEND_URL=https://canindeapi.clickmassa.com.br
+
+# URL do front para liberação do cors
+FRONTEND_URL=https://caninde.netlify.app
+
+# Porta utilizada para proxy com o serviço do backend
+PROXY_PORT=443
+
+# Porta que o serviço do backend deverá ouvir
+PORT=3100
+
+
+# conexão com o banco de dados
+DB_DIALECT=postgres
+DB_PORT=5432
+POSTGRES_HOST=postgres
+POSTGRES_USER=clickmassa
+POSTGRES_PASSWORD=clickmassa
+POSTGRES_DB=clickmassa
+
+TZ=America/Sao_Paulo
+
+# Chaves para criptografia do token jwt
+JWT_SECRET=DPHmNRZWZ4isLF9vXhjbkllhbajvhsauibnjsakMv1QabvpcA80Rc
+JWT_REFRESH_SECRET=EMPehEbrAdi7s8fGSeYzqGQbVaskjanskabsausblahsbas5wrjH4i
+
+# Dados de conexão com o REDIS
+IO_REDIS_SERVER=redis
+IO_REDIS_PORT=6379
+IO_REDIS_DB_SESSION='2'
+
+# CHROME_BIN=/usr/bin/google-chrome
+CHROME_BIN=/usr/bin/google-chrome-stable
+#CHROME_BIN=null
+
+# tempo para randomização da mensagem de horário de funcionamento
+MIN_SLEEP_BUSINESS_HOURS=10000
+MAX_SLEEP_BUSINESS_HOURS=20000
+
+# tempo para randomização das mensagens do bot
+MIN_SLEEP_AUTO_REPLY=500
+MAX_SLEEP_AUTO_REPLY=2000
+
+# tempo para randomização das mensagens gerais
+MIN_SLEEP_INTERVAL=500
+MAX_SLEEP_INTERVAL=2000
+
+
+# dados do RabbitMQ / Para não utilizar,basta comentar a var AMQP_URL
+RABBITMQ_DEFAULT_USER=admin
+RABBITMQ_DEFAULT_PASS=123456
+# AMQP_URL='amqp://admin:123456@localhost:5672?connection_attempts=5&retry_delay=5'
+
+# api oficial (integração em desenvolvimento)
+API_URL_360=https://waba-sandbox.360dialog.io
+
+# usado para mosrar opções não disponíveis normalmente.
+ADMIN_DOMAIN=clickmassa.com.br
+
+# Dados para utilização do canal do facebook
+FACEBOOK_APP_ID=323741562304862323160
+FACEBOOK_APP_SECRET_KEY=3266214132b31231238c98ac59f3e957a5efeaaa13500
+
+
+CHROME_ARGS = "--autoplay-policy=user-gesture-required,--disable-background-networking,--disable-background-timer-throttling,--disable-backgrounding-occluded-windows,--disable-breakpad,--disable-client-side-phishing-detection,--disable-component-update,--disable-default-apps,--disable-dev-shm-usage,--disable-domain-reliability,--disable-extensions,--disable-features=AudioServiceOutOfProcess,--disable-gpu,--disable-hang-monitor,--disable-ipc-flooding-protection,--disable-notifications,--disable-offer-store-unmasked-wallet-cards,--disable-popup-blocking,--disable-print-preview,--disable-prompt-on-repost,--disable-renderer-backgrounding,--disable-setuid-sandbox,--disable-speech-api,--disable-sync,--hide-scrollbars,--ignore-gpu-blacklist,--metrics-recording-only,--mute-audio,--no-default-browser-check,--no-first-run,--no-pings,--no-sandbox,--no-zygote,--password-store=basic,--use-gl=swiftshader,--use-mock-keychain,--disable-translate,--disable-web-security,--ignore-certificate-errors,--ignore-certificate-errors-spki-list,--ignore-ssl-errors,--safebrowsing-disable-auto-update,--unhandled-rejections=strict,--single-process"
+
+## ELASTIC
+#ELASTIC_URL=http://154.53.36.88:8200
+#ELASTIC_SERVICE_NAME='clickmassa'
+#ELASTIC_TOKEN=
+
+
+SMTP_MAIL_FROM=contato@clickmassa.com.br
+SMTP_HOST=in-v3.mailjet.com
+SMTP_PORT=587
+SMTP_ACCESS_KEY_ID=2835b4bd2cf234d91bcfe51626f8cc15
+SMTP_SECRET_KEY=2c41b9405b390bdca8d62562eb2c5903
+

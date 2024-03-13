@@ -1,0 +1,15 @@
+server {
+        listen 80;
+        index index.html index.htm index.nginx-debian.html;
+        server_name {{ domain_api }};
+        client_max_body_size 100M;
+        location / {
+                proxy_pass http://localhost:3000;
+       }
+ 
+}
+
+
+
+
+    

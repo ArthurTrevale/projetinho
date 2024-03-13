@@ -1,0 +1,23 @@
+<?php
+$curl = curl_init();
+curl_setopt_array($curl, array(
+        CURLOPT_RETURNTRANSFER => 1,
+        CURLOPT_URL => 'https://waf.sucuri.net/api?v2',
+        CURLOPT_POST => 1,
+        CURLOPT_POSTFIELDS => array(
+        // this is the Sucuri CloudProxy API key for this website
+        k => 'b84a6f89aa8d8c13395ee1b0b173382e',
+        // this is the Sucuri CloudProxy API secret for this website
+        s => '{{ secret_key }}',
+        // this is the Sucuri CloudProxy API action for this website
+        a => 'clear_cache',
+        // this is the Sucuri CloudProxy API action for this website
+        file => $_GET['path']
+        )
+));
+// Send the request & save response to $resp
+$resp = curl_exec($curl);
+echo '<pre>' . $resp . '</re>';
+// Close request to clear up some resources
+curl_close($curl);
+

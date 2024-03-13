@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gerador de Inventário Ansible</title>
+<link re="stylesheet" href="{{url_for ('static',filename='style.css')}}">
+<link rel="stylesheet" href="../static/style.css">
+</head>
+
+
+<body>
+
+<main>
+
+<header>
+<h1>Ativação JetsaLes Chat / Sender </h1>
+<hr>
+</header>
+
+<form action="" method="post">
+<Ul>
+
+<li>
+<label for="project_name">Nome Do Projeto</label><p></p>
+<input class="campo" type="text" name="project_name" id="project_name" pattern="[A-Za-zÀ-ÿ\-]*" placeholder="Nomes sem espaços" required>
+</li> 
+
+<li>
+<label for="ip_address">Endereço de IP</label><p></p>
+<input class="campo" type="text" name="ip_address" id="ip_address" pattern="((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)" placeholder="0.0.0.0 - 255.255.255.255" required>
+</li>
+
+<li>
+    <label for="server-user">Usuario do servidor</label><p></p>
+    <input class="campo" type="text" name="server-user" id="server-user" pattern="[A-Za-zÀ-ÿ\]*" placeholder="unbuto">
+    </li>
+<li>
+
+<li>
+    <label for="url">Monitoria</label><p></p>
+    <input class="campo" type="text" name="url" id="url" placeholder="digite as observações aqui">
+    </li>
+<li>
+
+<label for="empresas">Empresas</label><p></p>
+<select class="campo" name="empresas" id="empresas" required>
+
+<option value=""></option>
+
+<option value="Frete">Frete</option>
+
+<option value="Gowork">Gowork</option>
+
+<option value="Jetsales">Jetsales</option>
+
+<option value="Kemosoft">Kemosoft</option>
+
+<option value="Vectax">Vectax</option>
+
+<option value="ZapFacil">ZapFacil</option>
+
+</select>
+</li>
+
+<li>
+<label for="sistema">Servidores</label><p></p>
+<select class="campo" name="sistema" id="sistemas" required>
+
+<option value=""></option>
+
+<option value="Chat">Chat</option>
+
+<option value="Sender">Sender</option>
+
+<option value="WhiteLabel">WhiteLabel</option>
+
+<option value="Wordpress">Wordpress</option>
+
+<option value="Docker">Docker</option>
+
+<option value="Pm2">Pm2</option>
+
+<option value="Postgresql">Postgresql</option>
+
+<option value="Mysql">Mysql</option>
+
+<option value="Mongodb">Mongodb</option>
+
+</select>
+</li>
+
+
+
+</Ul>
+
+</li>
+<button type="submit">Enviar</button>
+</li>
+</form>
+
+
+
+</main>
+
+</body>
+
+</html>

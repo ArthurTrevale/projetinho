@@ -1,0 +1,21 @@
+server {
+    server_name {{ domain_api5 }};
+    listen 80;
+    client_max_body_size 35M;
+    keepalive_timeout 5;
+
+    location / {
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-NginX-Proxy true; #new
+        proxy_cache_bypass $http_upgrade;
+        proxy_redirect off;
+        proxy_pass http://127.0.0.1:3100;
+    }
+
+}

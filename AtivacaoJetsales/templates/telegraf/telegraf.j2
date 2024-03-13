@@ -1,0 +1,103 @@
+[global_tags]
+[agent]
+  interval = "30s"
+  round_interval = true
+  metric_batch_size = 10000
+  metric_buffer_limit = 100000
+  collection_jitter = "0s"
+  flush_interval = "10s"
+  flush_jitter = "0s"
+  precision = ""
+  debug = true
+  quiet = false
+  logtarget = "file"
+  logfile = "/var/log/telegraf/telegraf.log"
+  logfile_rotation_interval = "24h"
+  logfile_rotation_max_size = "10MB"
+  logfile_rotation_max_archives = 7
+  log_with_timezone = "America/Sao_Paulo"
+  hostname = "{{grafana_host}}"
+  omit_hostname = false
+[[outputs.influxdb]]
+  urls = ["http://{{srv_telegraf}}:8086"]
+  database = "{{db_telegraf}}"
+  insecure_skip_verify = true
+
+[[inputs.cpu]]
+percpu = true
+totalcpu = true
+collect_cpu_time = false
+report_active = false
+fielddrop = ["time_*"]
+
+[[inputs.disk]]
+ignore_fs = ["tmpfs", "devtmpfs", "devfs", "none", "iso9660", "overlay", "aufs", "squashfs"]
+
+[[inputs.io]]
+# no configuration
+
+[[inputs.mem]]
+# no configuration
+
+[[inputs.net]]
+  fieldpass = [ "bytes*" ]
+[[inputs.systemd_units]]
+
+[[inputs.system]]
+# no configuration
+
+[[inputs.swap]]
+# no configuration
+
+[[inputs.netstat]]
+# no configuration
+
+[[inputs.processes]]
+
+[[inputs.kernel]]
+# no configuration
+
+#[[inputs.procstat]]
+# no configuration
+
+[[inputs.swap]]
+# no configuration
+
+
+
+[[inputs.docker]]
+ endpoint = "unix:///var/run/docker.sock"
+  gather_services = false
+  source_tag = true
+  container_name_include = []
+  timeout = "5s"
+  perdevice = true
+  perdevice_include = []
+  total = true
+  total_include = ["cpu", "blkio", "network"]
+  docker_label_include = []
+  docker_label_exclude = []
+  tag_env = []
+  container_state_include = []
+  container_state_exclude = []
+  insecure_skip_verify = false
+
+[[inputs.nginx]]
+        urls = ["http://127.0.0.1/basic_status"]
+        insecure_skip_verify = true
+        response_timeout = "5s"
+[[inputs.logparser]]
+  files = ["/var/log/nginx/access.log"]
+  from_beginning = true
+  name_override = "nginx_access_log"
+  [inputs.logparser.grok]
+    patterns = ["%{COMBINED_LOG_FORMAT}"]
+
+[[inputs.procstat]]
+pattern = "nginx|dotnet|telegraf|docker"
+
+user = "daemon|root|telegraf|nginx|docker"
+
+# Get the number of processes and group them by status
+[[inputs.processes]]
+  # no configuration

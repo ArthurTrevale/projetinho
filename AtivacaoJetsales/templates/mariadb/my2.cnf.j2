@@ -1,0 +1,48 @@
+[mysqld]
+user            = mysql
+pid-file        = /var/run/mysqld/mysqld.pid
+socket          = /var/run/mysqld/mysqld.sock
+port            = 3306
+basedir         = /usr
+datadir         = /var/lib/mysql
+tmpdir          = /tmp
+lc-messages-dir = /usr/share/mysql
+explicit_defaults_for_timestamp
+
+# Otimização com base na memória e CPU
+key_buffer_size = {{ (ansible_memtotal_mb * 0.2) | int }}M
+query_cache_size = {{ (ansible_memtotal_mb * 0.1) | int }}M
+tmp_table_size = {{ (ansible_memtotal_mb * 0.05) | int }}M
+max_heap_table_size = {{ (ansible_memtotal_mb * 0.05) | int }}M
+innodb_buffer_pool_size = {{ (ansible_memtotal_mb * 0.5) | int }}M
+innodb_log_file_size = {{ (ansible_memtotal_mb * 0.25) | int }}M
+
+# Configurações de desempenho adicionais
+#max_connections = 100
+max_connections = {{ (ansible_processor_cores * 100) + ((ansible_memtotal_mb / 2) | int) }}
+#table_open_cache = 2000
+table_open_cache = {{ (ansible_memtotal_mb / 4) | int }}
+#thread_cache_size = 10
+thread_cache_size = {{ ((max_connections | int) * 0.1) | int }}
+
+
+# Configurações de log
+log_error = /var/log/mysql/error.log
+slow_query_log = 1
+slow_query_log_file = /var/log/mysql/mysql-slow.log
+long_query_time = 2
+
+[mysqld_safe]
+pid-file        = /var/run/mysqld/mysqld.pid
+socket          = /var/run/mysqld/mysqld.sock
+nice            = 0
+
+[client]
+port            = 3306
+socket          = /var/run/mysqld/mysqld.sock
+
+[mysqldump]
+quick
+quote-names
+max_allowed_packet = {{ (ansible_memtotal_mb * 0.01) | int }}M
+

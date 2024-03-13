@@ -1,0 +1,6 @@
+UPDATE mysql.user SET Password=PASSWORD('{{ root_pass }}') WHERE User='root';
+DROP User '';
+DROP User User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
+DROP DATABASE IF EXISTS test;
+DELETE FROM mysql.db WHERE Db='test';
+FLUSH PRIVILEGES;

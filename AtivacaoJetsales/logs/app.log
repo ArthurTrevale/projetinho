@@ -1,0 +1,161 @@
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.12.9.12:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 836-742-056
+INFO:werkzeug:127.0.0.1 - - [13/Mar/2024 15:50:46] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [13/Mar/2024 15:50:47] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+INFO:root:Definindo projeto: projeto-teste, playbook: ativacao-chat-jet.yml
+INFO:root:Inventário gerado com sucesso em ../AtivacaoJetsales/inventarios/projeto-teste.yml. O playbook a ser executado é o ativacao-chat-jet.yml.
+INFO:werkzeug:127.0.0.1 - - [13/Mar/2024 15:51:29] "POST / HTTP/1.1" 200 -
+INFO:root:Executando o comando: ansible-playbook -i ../AtivacaoJetsales/inventarios/projeto-teste.yml ../AtivacaoJetsales/ativacao-chat-jet.yml
+ERROR:root:Erro durante a execução do comando. Saída: 'ansible-playbook' nÆo ‚ reconhecido como um comando interno
+ou externo, um programa oper vel ou um arquivo em lotes.
+
+INFO:werkzeug:127.0.0.1 - - [13/Mar/2024 15:51:57] "GET /run_ansible HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'c:\\Users\\arthu\\OneDrive\\Área de Trabalho\\AtivacaoJetsales\\www\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 836-742-056
+INFO:werkzeug: * Detected change in 'c:\\Users\\arthu\\OneDrive\\Área de Trabalho\\AtivacaoJetsales\\www\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 836-742-056
+INFO:werkzeug: * Detected change in 'c:\\Users\\arthu\\OneDrive\\Área de Trabalho\\AtivacaoJetsales\\www\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 836-742-056
+INFO:werkzeug: * Detected change in 'c:\\Users\\arthu\\OneDrive\\Área de Trabalho\\AtivacaoJetsales\\www\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 836-742-056
+INFO:werkzeug: * Detected change in 'c:\\Users\\arthu\\OneDrive\\Área de Trabalho\\AtivacaoJetsales\\www\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 836-742-056
+INFO:werkzeug: * Detected change in 'c:\\Users\\arthu\\OneDrive\\Área de Trabalho\\AtivacaoJetsales\\www\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.12.9.12:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 836-742-056
+INFO:werkzeug:127.0.0.1 - - [13/Mar/2024 15:55:38] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [13/Mar/2024 15:55:38] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+INFO:root:Definindo projeto: teste, playbook: ativacao-chat-jet.yml
+INFO:root:Inventário gerado com sucesso em ../AtivacaoJetsales/inventarios/teste.yml. O playbook a ser executado é o ativacao-chat-jet.yml.
+INFO:werkzeug:127.0.0.1 - - [13/Mar/2024 15:55:59] "POST / HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'c:\\Users\\arthu\\OneDrive\\Área de Trabalho\\AtivacaoJetsales\\www\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 836-742-056
+INFO:werkzeug: * Detected change in 'c:\\Users\\arthu\\OneDrive\\Área de Trabalho\\AtivacaoJetsales\\www\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 836-742-056
+INFO:werkzeug: * Detected change in 'c:\\Users\\arthu\\OneDrive\\Área de Trabalho\\AtivacaoJetsales\\www\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 836-742-056
+INFO:werkzeug: * Detected change in 'c:\\Users\\arthu\\OneDrive\\Área de Trabalho\\AtivacaoJetsales\\www\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 836-742-056
+INFO:werkzeug: * Detected change in 'c:\\Users\\arthu\\OneDrive\\Área de Trabalho\\AtivacaoJetsales\\www\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 836-742-056
+INFO:werkzeug: * Detected change in 'c:\\Users\\arthu\\OneDrive\\Área de Trabalho\\AtivacaoJetsales\\www\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 836-742-056
+INFO:werkzeug: * Detected change in 'c:\\Users\\arthu\\OneDrive\\Área de Trabalho\\AtivacaoJetsales\\www\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 836-742-056
+INFO:werkzeug: * Detected change in 'c:\\Users\\arthu\\OneDrive\\Área de Trabalho\\AtivacaoJetsales\\www\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 836-742-056
+INFO:werkzeug:127.0.0.1 - - [13/Mar/2024 15:57:21] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [13/Mar/2024 15:57:21] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+INFO:root:Definindo projeto: teste, playbook: ativacao-chat-jet.yml
+INFO:root:Inventário gerado com sucesso em ../AtivacaoJetsales/inventarios/teste.yml. O playbook a ser executado é o ativacao-chat-jet.yml.
+INFO:werkzeug:127.0.0.1 - - [13/Mar/2024 15:57:34] "POST / HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'c:\\Users\\arthu\\OneDrive\\Área de Trabalho\\AtivacaoJetsales\\www\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 836-742-056
+INFO:werkzeug: * Detected change in 'c:\\Users\\arthu\\OneDrive\\Área de Trabalho\\AtivacaoJetsales\\www\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 836-742-056
+INFO:werkzeug: * Detected change in 'c:\\Users\\arthu\\OneDrive\\Área de Trabalho\\AtivacaoJetsales\\www\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 836-742-056
+INFO:werkzeug: * Detected change in 'c:\\Users\\arthu\\OneDrive\\Área de Trabalho\\AtivacaoJetsales\\www\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.12.9.12:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 836-742-056
+INFO:werkzeug:127.0.0.1 - - [13/Mar/2024 15:58:38] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [13/Mar/2024 15:58:38] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+INFO:root:Definindo projeto: teste-loop, playbook: ativacao-chat-jet.yml
+INFO:root:Inventário gerado com sucesso em ../AtivacaoJetsales/inventarios/teste-loop.yml. O playbook a ser executado é o ativacao-chat-jet.yml.
+INFO:werkzeug:127.0.0.1 - - [13/Mar/2024 15:59:57] "POST / HTTP/1.1" 200 -
+INFO:root:Executando o comando: ansible-playbook -i ../AtivacaoJetsales/inventarios/teste-loop.yml ../AtivacaoJetsales/ativacao-chat-jet.yml
+ERROR:root:Erro durante a execução do comando. Saída: 'ansible-playbook' nÆo ‚ reconhecido como um comando interno
+ou externo, um programa oper vel ou um arquivo em lotes.
+
+INFO:werkzeug:127.0.0.1 - - [13/Mar/2024 15:59:59] "GET /run_ansible HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [13/Mar/2024 16:01:02] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [13/Mar/2024 16:01:02] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+INFO:werkzeug: * Detected change in 'c:\\Users\\arthu\\OneDrive\\Área de Trabalho\\AtivacaoJetsales\\www\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 836-742-056
+INFO:werkzeug: * Detected change in 'c:\\Users\\arthu\\OneDrive\\Área de Trabalho\\AtivacaoJetsales\\www\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.12.9.12:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 836-742-056
+INFO:werkzeug:127.0.0.1 - - [13/Mar/2024 16:06:00] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [13/Mar/2024 16:06:00] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+INFO:root:Definindo projeto: user-test, playbook: ativacao-chat-jet.yml
+INFO:root:Inventário gerado com sucesso em ../AtivacaoJetsales/inventarios/user-test.yml. O playbook a ser executado é o ativacao-chat-jet.yml.
+INFO:werkzeug:127.0.0.1 - - [13/Mar/2024 16:06:28] "POST / HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'c:\\Users\\arthu\\OneDrive\\Área de Trabalho\\AtivacaoJetsales\\www\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 836-742-056
+INFO:werkzeug: * Detected change in 'c:\\Users\\arthu\\OneDrive\\Área de Trabalho\\AtivacaoJetsales\\www\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 836-742-056
+INFO:werkzeug: * Detected change in 'c:\\Users\\arthu\\OneDrive\\Área de Trabalho\\AtivacaoJetsales\\www\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 836-742-056
+INFO:werkzeug: * Detected change in 'c:\\Users\\arthu\\OneDrive\\Área de Trabalho\\AtivacaoJetsales\\www\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 836-742-056
+INFO:werkzeug:127.0.0.1 - - [13/Mar/2024 16:07:12] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [13/Mar/2024 16:07:13] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [13/Mar/2024 16:07:13] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+INFO:root:Definindo projeto: projetinho, playbook: ativacao-chat-jet.yml, empresa:Vectax
+INFO:root:Inventário gerado com sucesso em ../AtivacaoJetsales/inventarios/projetinho.yml. O playbook a ser executado é o ativacao-chat-jet.yml.
+INFO:werkzeug:127.0.0.1 - - [13/Mar/2024 16:07:31] "POST / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [13/Mar/2024 16:09:20] "GET / HTTP/1.1" 200 -
+INFO:root:Definindo projeto: projetinho, playbook: ativacao-chat-jet.yml, empresa:Vectax
+INFO:root:Inventário gerado com sucesso em ../AtivacaoJetsales/inventarios/projetinho.yml. O playbook a ser executado é o ativacao-chat-jet.yml.
+INFO:werkzeug:127.0.0.1 - - [13/Mar/2024 16:11:15] "POST / HTTP/1.1" 200 -

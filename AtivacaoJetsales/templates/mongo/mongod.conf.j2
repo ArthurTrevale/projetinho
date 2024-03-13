@@ -1,0 +1,34 @@
+systemLog:
+  destination: file
+  logAppend: true
+  path: /var/log/mongodb/mongod.log
+
+storage:
+  dbPath: /var/lib/mongo
+  journal:
+    enabled: true
+  engine: wiredTiger
+  wiredTiger:
+    engineConfig:
+      cacheSizeGB: {{ (total_memory_gb.stdout | float * 0.65) | round(2, 'ceil') }}
+    collectionConfig:
+      blockCompressor: snappy
+    indexConfig:
+      prefixCompression: true
+
+#processManagement:
+#  fork: true
+#  pidFilePath: /var/run/mongodb/mongod.pid
+
+net:
+  bindIp: {{ mongo_bind_ip }}
+  port: 27017
+
+# Configurações adicionais com base nas melhores práticas e otimizações
+#setParameter:
+#  maxIncomingConnections: {{ (cpu_count.stdout | int * 2048) | round(0, 'ceil') }}
+
+security:
+  authorization: disabled
+
+ 

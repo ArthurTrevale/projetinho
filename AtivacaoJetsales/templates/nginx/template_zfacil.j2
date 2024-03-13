@@ -1,0 +1,17 @@
+server {
+         listen 80;
+        root /vhosts/{{ domain }}/www
+        index index.html index.htm index.nginx-debian.html;
+
+        server_name {{ domain }}  { domain_temp }};
+
+        location / {
+                proxy_pass http://127.0.0.1:5002;
+        }
+       
+
+}
+
+
+
+

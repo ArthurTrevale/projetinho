@@ -1,0 +1,20 @@
+version: '3'
+services:
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    restart: always
+    env_file:
+      - ./.env
+    environment:
+      WATCHTOWER_CLEANUP: true
+      DOCKER_HOST: "api"
+      WATCHTOWER_SCHEDULE: "0 6/16 * * *"  #6h e 22h
+      TZ: "America/Sao_Paulo"
+      WATCHTOWER_ROLLING_RESTART: true
+      WATCHTOWER_DEBUG: true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /opt/services/config.json:/config.json
+    
+    

@@ -1,0 +1,99 @@
+server {
+	server_name {{ domain }} www.{{ domain }} {{ domain_temp }};
+	listen 80;
+	root /vhosts/{{ domain }}/www;
+	index index.php index.html index.htm;
+	server_tokens off;
+	client_max_body_size 64M;
+	add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+	add_header X-XSS-Protection "1; mode=block" always;
+	add_header X-Content-Type-Options nosniff always;
+	add_header X-Frame-Options SAMEORIGIN always;
+	add_header Referrer-Policy "origin-when-cross-origin" always;
+	add_header Content-Security-Policy "default-src 'self' https: data: 'unsafe-inline' 'unsafe-eval';" always;
+	
+	location = /favicon.ico {
+		log_not_found off;
+		access_log off;
+	}
+
+	location = /robots.txt {
+		allow all;
+		log_not_found off;
+		access_log off;
+	}
+
+	location / {
+		allow 192.88.134.0/23;
+		allow 185.93.228.0/22;
+		allow 2a02:fe80::/29;
+		allow 66.248.200.0/22;
+		allow 208.109.0.0/22;
+		allow 103.21.244.0/22;
+		allow 103.22.200.0/22;
+		allow 103.31.4.0/22;
+		allow 104.16.0.0/13;
+		allow 104.24.0.0/14;
+		allow 108.162.192.0/18;
+		allow 131.0.72.0/22;
+		allow 141.101.64.0/18;
+		allow 162.158.0.0/15;
+		allow 172.64.0.0/13;
+		allow 173.245.48.0/20;
+		allow 188.114.96.0/20;
+		allow 190.93.240.0/20;
+		allow 197.234.240.0/22;
+		allow 198.41.128.0/17;
+		allow 2400:cb00::/32;
+		allow 2606:4700::/32;
+		allow 2803:f800::/32;
+		allow 2405:b500::/32;
+		allow 2405:8100::/32;
+		allow 2a06:98c0::/29;
+		allow 2c0f:f248::/32;
+		#deny all;
+		allow all;
+
+		try_files $uri $uri/ /index.php?$args;
+	}
+	
+	# additional fallback if robots.txt doesn't exist
+	location @robots {
+	   return 200 "User-agent: *\nDisallow: /wp-admin/\nAllow: /wp-admin/admin-ajax.php\n";
+	}
+
+	# Deny all attempts to access hidden files such as .htaccess, .htpasswd, .DS_Store (Mac) excepted .well-known directory.
+	# Keep logging the requests to parse later (or to pass to firewall utilities such as fail2ban)
+	location ~ /\.(?!well-known\/) {
+		deny all;
+	}
+
+	# Deny access to any files with a .php extension in the uploads directory for the single site
+	location /wp-content/uploads {
+		location ~ \.php$ {
+			deny all;
+		}
+	}
+
+	# Deny access to any files with a .php extension in the uploads directory
+	# Works in sub-directory installs and also in multisite network
+	# Keep logging the requests to parse later (or to pass to firewall utilities such as fail2ban)
+	location ~* /(?:uploads|files)/.*\.php$ {
+		deny all;
+	}
+
+	location ~ \.php$ {
+		#NOTE: You should have "cgi.fix_pathinfo = 0;" in php.ini
+		include fastcgi.conf;
+		fastcgi_intercept_errors on;
+		fastcgi_pass 127.0.0.1:9000;
+		fastcgi_buffers 16 16k;
+		fastcgi_buffer_size 32k;
+		client_max_body_size 128m;
+
+	}
+
+	location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
+		log_not_found off;
+	}
+}

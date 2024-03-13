@@ -1,0 +1,14 @@
+server {                                                                                                                                                       
+  root /vhosts/{{ domain5 }}/www;          
+  index index.html index.htm index.nginx-debian.html;                                                                                       
+  listen 80;                                                                                                                                
+  server_name {{ domain5 }} www.{{ domain5 }} ;                                                                                                               
+  add_header X-Frame-Options SAMEORIGIN;
+  add_header X-Content-Type-Options nosniff;                                                                                                                  
+  add_header X-XSS-Protection "1; mode=block";
+  add_header Strict-Transport-Security "max-age=31536000; includeSubdomains; preload";
+  server_tokens off;
+  location / {                                                                                                                              
+    proxy_pass https://{{projeto5}}-enterprise.netlify.app;                                                                                                 
+  }           
+}

@@ -1,0 +1,789 @@
+---
+- name: ATIVAÇÃO ENTERPRISE/CHAT JETSALES CONTABO CENTOS 7
+  hosts: all 
+  become: true
+  become_method: sudo
+  vars:
+    #VARS PROMPTAIL / TELEGRAF 
+    grafana_host: "{{inventory_hostname}}"
+    grafana_server: grafana.jetsalesbrasil.com
+    srv_telegraf: grafana.jetsalesbrasil.com
+    db_telegraf: jetsales
+    python_version: 3.10.10
+    #ansible_python_interpreter: /bin/python3
+    swap_file: "/swapfile"
+    swap_space: "{{ (ansible_memtotal_mb * 0.3) | int }}M"
+    #VARS CLOUDFLARE 
+    entrada_api: "{{ projeto }}api"
+    entrada: "{{ projeto }}"
+    entrada2: "www.{{ projeto }}"
+    domain_cf: jetsalesbrasil.com
+    token: "51d5e1bc1db47e6602c3d7eaba0aacb672356"
+    destino: "{{ ansible_ssh_host }}" 
+    destino_front: "jet-{{projeto}}.netlify.app"
+    email: "gerencia@migreparanuvem.com.br"
+    tipo: "A" 
+    #VARS DOCKER
+    gitlab_registry_username: canindeapi-token
+    gitlab_registry_password: 3Ls5it8ZrmcS2w_uL2S6
+    #USER DEPLOY KEYS
+    ssh_key_files:
+      - ../files/Keys/durans
+      - ../files/Keys/rubem 
+      - ../files/Keys/rcastro      
+      - ../files/Keys/lucas 
+      - ../files/Keys/migre   
+    ssh_key_files_migre:
+      - ../files/Keys/rubem
+      - ../files/Keys/rcastro
+      - ../files/Keys/migre   
+      
+  tasks:
+    - name: Configurando o hostname
+      hostname:
+        name: "{{ hostname }}"
+
+    - name: Atualizando os pacotes do sistema operacional
+      shell: sudo yum update -y
+
+    - name: Desabilitando o SELinux
+      selinux:
+        state: disabled
+
+    - name: Configurando o timezone America/Sao_Paulo'
+      timezone:
+        name: America/Sao_Paulo
+
+    - name: Instalando o EPEL
+      yum:
+        name: epel-release
+        state: present
+    
+    - name: Instalando o repositório de pacotes do Zabbix
+      yum:
+        name: https://repo.zabbix.com/zabbix/6.0/rhel/7/x86_64/zabbix-release-6.0-1.el7.noarch.rpm
+        state: present
+    
+    - name: Instalando o Zabbix
+      yum:
+        name: zabbix-agent2
+        state: present
+
+    - name: Configura a diretiva de log 
+      lineinfile:
+        dest: /etc/zabbix/zabbix_agent2.conf
+        regexp: '^LogType=file'
+        line: 'LogType=system'
+
+    - name: Configura a diretiva Server no agente Zabbix
+      lineinfile:
+        dest: /etc/zabbix/zabbix_agent2.conf
+        regexp: '^Server=127.0.0.1'
+        line: 'Server=jetsales.migreparanuvem.com.br'
+        
+    - name: Configura a diretiva ServerActive no agente Zabbix
+      lineinfile:
+        dest: /etc/zabbix/zabbix_agent2.conf
+        regexp: '^ServerActive=127.0.0.1'
+        line: 'ServerActive=jetsales.migreparanuvem.com.br'
+        
+    - name: Configura a diretiva Hostname no agente Zabbix
+      lineinfile:
+        dest: /etc/zabbix/zabbix_agent2.conf
+        regexp: '^Hostname=Zabbix'
+        line: 'Hostname={{ zabbix_hostname }}'
+    
+    - name: Adiciona monitoria docker 
+      lineinfile:
+        path: /etc/zabbix/zabbix_agent2.conf
+        line: 'Plugins.Docker.Endpoint=unix:///var/run/docker.sock'
+        insertafter: EOF
+        
+    - name: Reiniciando o serviço do Zabbix agent e configurando o inicio automático
+      systemd:
+        name: zabbix-agent2
+        state: restarted
+        enabled: yes
+
+    - name: Instalando o FirewallD
+      yum:
+        name: firewalld
+        state: present
+
+    - name: Instalando o FirewallD
+      yum:
+        name: firewalld
+        state: present
+
+    - name: Instalando pacotes úteis
+      yum:
+        name: git,tmux,ntp,vim,telnet, mlocate, certbot-nginx,iotop,iftop,nano,ntpdate,zip,unzip,epel-release
+        state: present
+      tags:
+        pacotesuteis
+
+    - name: Configurando o serviço de NTP
+      systemd:
+        name: ntpd
+        state: restarted
+        enabled: yes
+
+    - name: Configura o grupo wheel 
+      group:
+          name: wheel
+          state: present
+    
+    - name: Criar o usuário padrão de acesso da Infra migre
+      user:
+        name: migre  
+        groups: wheel
+        comment: "migre"
+        home: /home/migre
+        state: present
+        append: yes
+    
+    - name: Configura a chave de autorização SSH para o usuário migre
+      authorized_key:
+        user: migre 
+        state: present
+        key: "{{ lookup('file', item) }}"
+      with_items: "{{ ssh_key_files_migre }}"
+
+    - name: Criar o usuário Deploy  
+      user:
+        name: deploy  
+        home: /opt/services
+        groups: 
+          - wheel
+        comment: "Deploy dev"
+        state: present
+        append: yes
+      tags:
+        DeployAPi
+
+    - name: Cria o diretorio Services em .docker
+      file:
+        path: /opt/services/.docker
+        owner: deploy 
+        group: deploy 
+        state: directory
+      tags: 
+        DeployAPi
+    
+    - name: Configura a chave de autorização SSH para o usuário Deploy dev
+      authorized_key:
+        user: deploy 
+        state: present
+        key: "{{ lookup('file', item) }}"
+      with_items: "{{ ssh_key_files }}"
+      tags:
+        DeployAPi
+  
+    - name: Permitir que o grupo "wheel" possa rodar comando com sudo sem senha
+      lineinfile:
+        dest: /etc/sudoers
+        state: present
+        regexp: '^# %wheel'
+        line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+        validate: 'visudo -cf %s'
+
+    - name: Criando Entrada do Tipo A {{ entrada }}
+      cloudflare_dns:
+        account_api_token: "{{ token }}"
+        account_email: "{{ email }}"
+        domain: "{{ domain_cf }}"
+        record: "{{ entrada }}"
+        type: "{{ tipo }}"
+        ttl: 120
+        value: "{{ ansible_ssh_host }}"
+        proxied: no
+        state: present
+        #state: absent 
+      register: record
+
+    - name: Criando Entrada do Tipo CNAME FRONT {{ entrada2 }}
+      cloudflare_dns:
+        account_api_token: "{{ token }}"
+        account_email: "{{ email }}"
+        domain: "{{ domain_cf }}"
+        record: "{{ entrada2 }}"
+        type: "A"
+        ttl: 120
+        value: "{{ ansible_ssh_host }}"
+        proxied: no
+        state: present
+        #state: absent 
+      register: record
+
+    - name: Criando Entrada do Tipo A {{ entrada_api }}
+      cloudflare_dns:
+        account_api_token: "{{ token }}"
+        account_email: "{{ email }}"
+        domain: "{{ domain_cf }}"
+        record: "{{ entrada_api }}"
+        type: "{{ tipo }}"
+        ttl: 120
+        value: "{{ ansible_ssh_host }}"
+        proxied: no
+        state: present
+        #state: absent 
+      register: record
+
+    - name: Remove confs nginx 
+      shell: sudo rm -f /etc/nginx/conf.d/*.conf 
+    
+    - name: Instalando nginx
+      yum:
+        name: nginx
+        state: present
+      tags: 
+        nginx
+
+    - name: Configuração padrão do nginx
+      copy:
+        src: "../files/nginx/nginx.centos7.conf"
+        dest: /etc/nginx/nginx.conf
+      tags: 
+        nginx
+
+    - name: Configuração do status
+      template:
+        src: "../templates/nginx/clickmassa/default_rcastr_nginx.conf"
+        dest: /etc/nginx/conf.d/default.conf
+      tags: 
+        nginx
+
+    - name: Configuração do virtual host {{ domain_api }}
+      template:
+        src: "../templates/nginx/clickmassa/jet-enterprise-api.j2"
+        dest: /etc/nginx/conf.d/{{ domain_api }}.conf
+      tags: 
+        nginx
+
+    - name: Configuração do virtual host {{ domain }}
+      template:
+        src: "../templates/nginx/clickmassa/jet-enterprise-front.j2"
+        dest: /etc/nginx/conf.d/{{ domain }}.conf
+      tags: 
+        nginx
+    
+    - name: Ajustando timezone sistema
+      shell: sudo timedatectl set-timezone "America/Sao_Paulo"
+        
+    - name: Configurando o serviço do nginx
+      systemd:
+        name: nginx
+        state: restarted
+        enabled: yes
+      tags: 
+        nginx
+
+    - name: Copy MOTD generation script to remote server
+      ansible.builtin.copy:
+        src: ../templates/motd-script.sh
+        dest: /usr/local/bin/motd.sh
+        mode: '0755'
+        owner: root
+        group: root
+
+    - name: Ensure PAM configuration includes the MOTD script
+      ansible.builtin.lineinfile:
+        path: /etc/profile
+        line: '/usr/local/bin/motd.sh'
+        state: present
+
+    - name: Baixando promtail 
+      ansible.builtin.get_url:
+        url: https://github.com/grafana/loki/releases/download/v2.4.1/promtail-linux-amd64.zip
+        dest: /bin
+        mode: 770
+
+    - name: Descompacta promtail 
+      ansible.builtin.unarchive:
+        src: /bin/promtail-linux-amd64.zip
+        dest: /bin
+        remote_src: yes 
+
+    - name: Ajuste nomes 
+      shell: sudo mv /bin/promtail-linux-amd64 /bin/promtail
+
+    - name: Ajuste permissoes 
+      file: 
+        path: /bin/promtail
+        state: file 
+        owner: root 
+        group: root 
+        mode: 777
+
+    - name: Criação diretorio conf promtail 
+      shell: mkdir -p /etc/promtail
+
+    - name: Gerando conf Promtail 
+      template:
+        src: ../templates/promtail/docker_promtail.conf.j2
+        dest: /etc/promtail/config-promtail.yml
+
+    - name: Criando servido do Promtail 
+      copy:
+        src: ../templates/promtail/promtail.service
+        dest: /etc/systemd/system/promtail.service
+
+    - name: Restartando promtail 
+      service:
+        name: promtail
+        state: restarted
+        enabled: yes
+
+    - name: Cria cron para inicio no boot do Promtail 
+      ansible.builtin.cron:
+        name: "Restart Promtail"
+        special_time: reboot        
+        job: "sudo service promtail restart"
+      tags:
+        - renovacron
+  
+    
+    - name: Copy config
+      copy:
+        src: ../templates/telegraf/telegraf.service
+        dest: /usr/lib/systemd/system/telegraf.service
+      tags:
+        - Telegrafconf
+  
+    - name: Reload daemon
+      shell: systemctl daemon-reload
+      tags:
+      - Telegrafconf
+
+    - name: Ensure Telegraf service is running and enabled
+      systemd:
+        name: telegraf
+        state: restarted
+        enabled: yes
+      tags:
+      - Telegrafconf
+      ignore_errors: yes
+      
+    - name: Limpando telegraf old 
+      shell: sudo rm -f /etc/telegraf/telegraf.conf 
+      
+  
+    - name: Add InfluxData repository (CentOS)
+      yum_repository:
+        name: influxdata
+        description: InfluxData repository
+        baseurl: https://repos.influxdata.com/stable/\$basearch/main
+        gpgkey: https://repos.influxdata.com/influxdata-archive_compat.key
+        gpgcheck: yes
+        enabled: yes
+    
+    - name: Install Telegraf (CentOS)
+      yum:
+        name: telegraf
+        state: present
+    
+    - name: Configure Telegraf
+      template:
+        #templates/telegraf/telegraf.j2
+        src: ../templates/telegraf/telegraf-full.j2
+        dest: /etc/telegraf/telegraf.conf
+        owner: root
+        group: root
+        mode: 0644
+  
+    - name: Ensure Telegraf service is running and enabled
+      systemd:
+        name: telegraf
+        state: started
+        enabled: yes
+
+    # SSL
+    - name: Gerando ssl  {{ domain_api }}
+      shell: certbot --nginx -d {{projeto}}api.jetsalesbrasil.com --redirect --noninteractive --agree-tos --email gerencia@migreparanuvem.com.br --force-renewal
+      tags: 
+        - GeraSSL
+
+    - name: Gerando ssl  {{ domain }} and www.{{ domain }}
+      shell: certbot --nginx -d {{projeto}}.jetsalesbrasil.com -d www.{{projeto}}.jetsalesbrasil.com --redirect --noninteractive --agree-tos --email gerencia@migreparanuvem.com.br --force-renewal
+      tags: 
+        - GeraSSL
+
+    # DOCKER INSTALL 
+    - name: Removendo versões antigas do docker 
+      yum:
+        name: docker, docker-client, docker-client-latest, docker-common, docker-latest, docker-latest-logrotate, docker-logrotate, docker-engine
+        state: absent
+          
+    - name: Instalando repositorio do Docker 
+      yum: 
+        name: yum-utils
+        state: present 
+      
+    - name: Adicionar o repositório Docker CE
+      yum_repository:
+        name: docker-ce
+        description: Repositório Docker CE
+        baseurl: https://download.docker.com/linux/centos/
+        gpgcheck: yes
+        enabled: yes  
+    
+    
+    - name: Install Docker
+      yum:
+        name: docker-ce,docker-ce-cli, containerd.io, docker-buildx-plugin, docker-compose-plugin
+        state: present
+
+    - name: Start Docker service
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Install Docker Compose
+      get_url:
+        url: https://github.com/docker/compose/releases/download/v2.16.0/docker-compose-linux-x86_64 
+        dest: /bin/docker-compose
+        mode: 0755
+
+    - name: Check Docker Compose version
+      shell: docker-compose --version
+
+    - name: Adiciona usuarios ao docker 
+      shell: sudo groupadd docker;sudo usermod -aG docker migre;sudo usermod -aG docker deploy;sudo usermod -aG docker zabbix;sudo usermod -aG docker telegraf 
+      ignore_errors: yes
+
+    - name: Criando cron de renovacao SSL
+      ansible.builtin.cron:
+        name: "Renova SSL"
+        minute: "0"
+        hour: "*/12"
+        job: "certbot renew -q"    
+        
+    - name: Criando cron de ajuste do /vhosts
+      ansible.builtin.cron:
+        name: "Ajusta vhosts"
+        minute: "*/5"
+        hour: "*"
+        job: "chown -R nginx.nginx /vhosts"
+      tags:
+        - renovacron
+    
+    - name: Criando cron ntpdate pra ajuste de horario
+      ansible.builtin.cron:
+        name: "Atualiza Hora"
+        minute: "*/10"
+        hour: "*"
+        job: "ntpdate a.st1.ntp.br"
+      tags:
+        - renovacron
+
+    - name: Criando cron docker system prune
+      ansible.builtin.cron:
+        name: "Limpar docker"
+        weekday: "2"
+        job: "docker system prune -a -f "
+      tags:
+        - renovacron
+
+    - name: Executar comando para instalar portainer agent
+      shell: >
+        docker run -d \
+        -p 9001:9001 \
+        --name portainer_agent \
+        --restart=always \
+        -v /var/run/docker.sock:/var/run/docker.sock \
+        -v /var/lib/docker/volumes:/var/lib/docker/volumes \
+        portainer/agent:2.17.1
+      ignore_errors: yes
+
+    - name: Install required packages
+      yum:
+        name:
+          - gcc
+          - openssl-devel
+          - bzip2-devel
+          - libffi-devel
+          - zlib-devel
+          - python3
+          - python3-pip
+        state: present
+      tags:
+        - Python3Install
+
+    - name: Instalar pip docker com Python 3
+      ansible.builtin.pip:
+        name: 
+          - docker
+          - docker-py
+        executable: pip3
+        state: present
+      ignore_errors: yes
+
+    - name: Instalar pip docker com Python 3.10
+      ansible.builtin.pip:
+        name: 
+          - docker-py
+        executable: pip3.10
+        state: present
+      ignore_errors: yes
+
+    - name: Instalar pip docker com Python 2 (se necessário)
+      ansible.builtin.pip:
+        name: 
+          - docker
+          - docker-py
+        executable: pip
+        state: present
+      ignore_errors: yes
+    
+    ## DEPLOY    
+    
+    - name: Cria e ajusta o .env 
+      template:
+        src:  ../templates/docker/enterprise/env_enterprise_api-jet.j2   
+        dest: /opt/services/.env 
+        owner: deploy 
+        group: deploy
+
+      tags: 
+        DeployAPi
+
+    - name: Cria docker-compose-api.yml 
+      copy:
+        src:  ../templates/docker/enterprise/docker-compose-api.yml
+        dest: /opt/services/docker-compose-api.yml 
+        owner: deploy 
+        group: deploy
+        
+      tags: 
+        - DeployAPi
+
+    - name: Copiar arquivo de conexão gitlab
+      copy:
+        src:  ../templates/docker/enterprise/Config-json-gitlab-vtax.json
+        dest: /opt/services/.docker/config.json
+        owner: deploy 
+        group: deploy
+      tags: 
+        CopiaCompose
+      
+    - name: Iniciar serviços com docker-compose
+      become_user: deploy 
+      docker_compose:
+        project_src: /opt/services
+        files:
+          - docker-compose-api.yml
+        state: present
+        detached: yes
+      ignore_errors: yes
+
+    - name: Rodando migration 
+      become_user: deploy 
+      shell: cd /opt/services && docker exec -it api  bash -c 'npm run db:migrate';docker exec -it api  bash -c 'npx sequelize db:seed:all'
+      tags: 
+        - DeployAPi
+      ignore_errors: yes
+
+    - name: Create logrotate directory
+      file:
+        path: /etc/logrotate.d
+        state: directory
+        mode: 0755
+
+    - name: Create logrotate file for Docker containers
+      copy:
+        dest: /etc/logrotate.d/docker
+        content: |
+          /var/lib/docker/containers/*/*.log {
+            rotate 7
+            daily
+            compress
+            missingok
+            delaycompress
+            copytruncate
+          }
+        mode: 0644
+
+    - name: Test logrotate configuration
+      shell: logrotate -d /etc/logrotate.d/docker
+    
+    #SET SWAP   
+    - name: set swap_file variable
+      set_fact:
+        swap_file: /{{ swap_space }}.swap
+      ignore_errors: yes
+      tags:
+        - CriaSwap
+    
+    - name: create swap file
+      command: fallocate -l {{ swap_space }} {{ swap_file }}
+      ignore_errors: yes
+      tags:
+        - CriaSwap
+
+    - name: set permissions on swap file
+      file:
+        path: "{{ swap_file }}"
+        mode: 0600
+      ignore_errors: yes
+      tags:
+        - CriaSwap
+    - name: format swap file
+      command: mkswap {{ swap_file }}
+      tags:
+        - CriaSwap
+      
+    - name: add to fstab
+      lineinfile:
+        dest: /etc/fstab
+        regexp: "{{ swap_file }}"
+        line: "{{ swap_file }} none swap sw 0 0"
+      ignore_errors: yes
+      tags:
+        - CriaSwap
+
+    - name: turn on swap
+      command: swapon -a
+      ignore_errors: yes
+      tags:
+        - CriaSwap
+
+    - name: set swapiness
+      sysctl:
+        name: vm.swappiness
+        value: "1"
+      ignore_errors: yes
+      tags:
+        - CriaSwap
+
+    - name: Install Auditd package
+      yum:
+        name: audit
+        state: present
+      tags:
+        ConfigAuditdb
+
+    - name: Copy Auditd configuration file
+      copy:
+        src: ../templates/confs/audit.conf 
+        dest: /etc/audit/auditd.conf
+        owner: root
+        group: root
+        mode: 0600
+      tags:
+        ConfigAuditdb
+  
+    - name: Reload Auditd service
+      shell: sudo service auditd restart ;sudo service docker restart 
+      tags:
+        ConfigAuditdb
+    
+  
+    - name: Enable Auditd service on boot
+      shell: sudo systemctl enable auditd
+      tags:
+        ConfigAuditdb
+
+
+    - name: Adicionar DNS 1.1.1.1 ao resolv.conf
+      lineinfile:
+        dest: /etc/resolv.conf
+        line: "nameserver 1.1.1.1"
+        insertbefore: '^nameserver'
+      tags:
+        ConfigAuditdb
+
+
+    - name: Adicionar DNS 8.8.8.8 ao resolv.conf
+      lineinfile:
+        dest: /etc/resolv.conf
+        line: "nameserver 8.8.8.8"
+        insertbefore: '^nameserver'
+      tags:
+        ConfigAuditdb
+    
+    ## INSTALL CHROME STABLE 
+    - name: Adicionar repositório do Google Chrome
+      copy:
+        dest: /etc/yum.repos.d/google-chrome.repo
+        content: |
+          [google-chrome]
+          name=google-chrome
+          baseurl=http://dl.google.com/linux/chrome/rpm/stable/x86_64
+          enabled=1
+          gpgcheck=1
+          gpgkey=https://dl.google.com/linux/linux_signing_key.pub
+      tags:
+        InstallChrome
+      ignore_errors: yes
+    - name: Instalar Google Chrome
+      yum:
+        name: google-chrome-stable
+        state: present
+      tags:
+        InstallChrome
+      ignore_errors: yes
+    
+    - name: Iniciar Google Chrome
+      shell: which google-chrome-stable
+      register: chrome_path
+      tags:
+        InstallChrome
+      ignore_errors: yes
+    
+    - name: Mostrar caminho de instalação do Google Chrome
+      debug:
+        var: chrome_path.stdout
+      tags:
+        InstallChrome
+      ignore_errors: yes
+
+    - name: Chamar script para adicionar host no Zabbix
+      command: "/home/migre/ansible/bin/ZbxEnterpriseJet.sh {{ hostname }} {{ ansible_ssh_host }}"
+      tags:
+        script-zabbix
+      ignore_errors: yes
+
+    - name: Adicionar monitor ao {{ domain }} no Uptime Migre 
+      shell: |
+        curl -X POST https://api.uptimerobot.com/v2/newMonitor \
+        -d api_key=u897855-a82bccb01ac63547b54cd2e2 \
+        -d friendly_name='{{ domain }}' \
+        -d url='https://{{ domain }}' \
+        -d type=1 \
+        -d interval=300
+      tags:
+        script-zabbix
+      ignore_errors: yes
+
+    - name: Adicionar monitor ao {{ domain_api }} no Uptime Migre 
+      shell: |
+        curl -X POST https://api.uptimerobot.com/v2/newMonitor \
+        -d api_key=u897855-a82bccb01ac63547b54cd2e2 \
+        -d friendly_name='{{ domain_api }}' \
+        -d url='https://{{ domain_api }}/status' \
+        -d type=1 \
+        -d interval=300
+      tags:
+        script-zabbix
+      ignore_errors: yes
+
+    - name: Enviando mensagem no Telegram
+      telegram:
+        token: '5846394563:AAFjDRx47zZz10NHey6blqKDi1EnA9bGLtE'
+        api_args:
+          chat_id: "-1001602328481" # JetSales 
+          parse_mode: "markdown"
+          text: "Host ({{ projeto }}) ATIVADO COM SUCESSO ! Efetue o acesso com sua chave ao ip: ({{ ansible_host }}) e o dominios criados são : ({{ domain }}) e {{ domain_api }} !! Efetue o acesso usando a sua chave ssh! "
+      tags: 
+        EnviaTelegram
+        
+##   Reboot do servidor
+
+    - name: Reboot do servidor
+      command: /sbin/shutdown -r +1
+      async: 0
+      poll: 0
+      ignore_errors: true
+      tags: 
+        Reboot

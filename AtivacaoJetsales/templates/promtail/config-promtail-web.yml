@@ -1,0 +1,28 @@
+server:
+  http_listen_address: 0.0.0.0
+  http_listen_port: 9080
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://grafana.zapfacil.com:3100/loki/api/v1/push
+
+scrape_configs:
+- job_name: system
+  static_configs:
+  - targets:
+      - localhost
+    labels:
+      job: nginx_Contabil-WP
+      host: Contabil-WP
+      __path__: /var/log/nginx/*log
+
+- job_name: messages
+  static_configs:
+  - targets:
+      - localhost
+    labels:
+      job: messages_Contabil-WP
+      host: Contabil-WP
+      __path__: /var/log/messages

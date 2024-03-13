@@ -1,0 +1,103 @@
+*{margin: 0;
+padding: 0;
+box-sizing: border-box;}
+
+
+body{
+background-color: #8AB8A8;
+color: black;
+max-width: 100%;
+width: 120rem;
+height: 60rem;
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+}
+
+hr{
+height: 0.25rem;
+width: 30.5rem;
+border: none;
+background:#084D6E ;
+border-radius: 1rem;
+margin-bottom: 2rem;
+}
+
+
+h1{
+font-family: "Varela", sans-serif;
+font-size: 2rem;
+font-weight: 400;
+font-style: normal;
+color: #084D6E;
+margin-bottom: 0.5rem;
+}  
+
+main{
+background-color: #FAFAD4;
+width: 44rem;
+height: 30rem;
+border-radius: 4rem;
+border-style: solid;
+border-color: #084D6E;
+display: flex;
+flex-direction: column;
+align-items: center;
+padding: 3rem 2rem;
+box-shadow: 0rem 0rem 0.5rem black;
+}
+
+form{
+font-family: "Montserrat",sans-serif;
+font-size: 1rem;
+font-weight: 400;
+font-style: normal;
+display: flex;
+flex-direction: column;
+}
+
+ul{
+column-count: 2;
+list-style: none;
+column-gap: 2rem;
+margin-bottom: 1rem;
+}
+
+li{margin-bottom: 3rem;}
+
+label{ margin-left: 0.75rem; }
+
+.campo{
+width: 18.75rem;
+height: 2rem;
+border-radius: 1rem ;
+background: none;
+border-color: #AEAEAE;
+}
+
+button{
+background-color: #0D6690;
+color: white;
+border: none;
+margin: 0;
+padding: 0;
+width: auto;
+overflow: visible;
+width: 18.75rem;
+height: 3rem;
+font-size: 1.5rem;
+border-radius: 1rem;
+margin-top: 0.25rem;
+align-self: center;
+}
+
+button:hover{background-color: #084D6E;
+}
+
+div{
+background-color: black;
+width:39.5rem;
+height: 15rem;
+border-radius: 1.5rem;
+}

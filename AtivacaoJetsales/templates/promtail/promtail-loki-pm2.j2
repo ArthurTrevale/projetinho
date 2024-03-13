@@ -1,0 +1,36 @@
+server:
+  http_listen_address: 0.0.0.0
+  http_listen_port: 9080
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://grafana.migreparanuvem.com:3100/loki/api/v1/push
+
+scrape_configs:
+- job_name: messages_{{ hostname }}
+  static_configs:
+  - targets:
+      - localhost
+    labels:
+      job: messages_{{ hostname }}
+      host: {{ hostname }}
+      __path__: /var/log/messages
+
+- job_name: nginx_{{ hostname }}
+  static_configs:
+  - targets:
+      - localhost
+    labels:
+      job: nginx_{{ hostname }}
+      host: scretme-api
+      __path__:  /var/log/nginx/*.log
+- job_name: pm2_{{ hostname }}
+  static_configs:
+  - targets:
+      - localhost
+    labels:
+      job: pm2_{{ hostname }}
+      host: {{ hostname }}
+      __path__: /home/*/.pm2/logs/*.log

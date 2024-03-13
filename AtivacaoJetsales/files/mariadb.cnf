@@ -1,0 +1,65 @@
+# The MariaDB server
+[mysqld]
+port            = 3306
+bind-address    = 0.0.0.0
+socket          = /var/lib/mysql/mysql.sock
+skip-external-locking
+key_buffer_size = 256M
+max_allowed_packet = 16M
+table_open_cache = 280
+table_definition_cache = 14080
+sort_buffer_size = 1M
+performance_schema = ON
+read_buffer_size = 1M
+read_rnd_buffer_size = 4M
+myisam_sort_buffer_size = 64M
+thread_cache_size = 8
+query_cache_type = 0
+query_cache_limit = 256K
+query_cache_min_res_unit = 2k
+query_cache_size = 0
+# Try number of CPU's*2 for thread_concurrency
+thread_concurrency = 8
+skip_name_resolve
+join_buffer_size = 280K
+slow_query_log = 1
+slow-query_log_file = /var/log/mysql-slow.log
+long_query_time = 5
+
+# You can set .._buffer_pool_size up to 50 - 80 %
+# of RAM but beware of setting memory usage too high
+innodb_buffer_pool_size = 16G
+innodb_buffer_pool_instances = 4
+# Set .._log_file_size to 25 % of buffer pool size
+innodb_log_file_size = 8G
+innodb_log_buffer_size = 8M
+innodb_flush_log_at_trx_commit = 1
+innodb_flush_method=O_DIRECT
+innodb_file_per_table=1
+
+max_connections=1000
+max-connect-errors=1000000
+sql_mode=STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
+
+# Mysql Wait_timeout
+#interactive_timeout=3600
+wait_timeout = 300
+
+[mysqldump]
+quick
+max_allowed_packet = 16M
+
+[mysql]
+no-auto-rehash
+
+# Remove the next comment character if you are not familiar with SQL
+#safe-updates
+
+[myisamchk]
+key_buffer_size = 128M
+sort_buffer_size = 128M
+read_buffer = 2M
+write_buffer = 2M
+
+[mysqlhotcopy]
+interactive-timeout

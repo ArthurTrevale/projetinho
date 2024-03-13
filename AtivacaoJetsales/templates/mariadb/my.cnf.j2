@@ -1,0 +1,6 @@
+# add under the [mysqld] section
+innodb_buffer_pool_size	= {{ (ansible_memtotal_mb * 0.8) | int }}M
+log	=	/var/log/mysql.log
+log-error	=	/var/log/mysql_error.log
+default-time-zone='-03:00'
+bind-address=0.0.0.0
